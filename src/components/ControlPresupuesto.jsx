@@ -1,12 +1,23 @@
 /* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
-export default function ControlPresupuesto({ presupuesto, setPresupuesto }) {
-  function formatMoney(cantidad) {
-    return cantidad.toLocaleString("es-MX", {
-      style: "currency",
-      currency: "MXN",
-    });
-  }
+import PropTypes from "prop-types";
+import { formatMoney } from "../helpers";
+import { useEffect, useState } from "react";
+export default function ControlPresupuesto({
+  presupuesto,
+  setPresupuesto,
+  gastos,
+}) {
+  const [disponible, setDisponible] = useState(0);
+  const [gastado, setGastado] = useState(0);
+  useEffect(() => {
+    const totalGastado = gastos.reduce(
+      (total, gasto) => gasto.cantidad + total,
+      0
+    );
+    const totalDisponible = presupuesto - totalGastado;
+    setGastado(totalGastado);
+    setDisponible(totalDisponible);
+  }, [gastos]);
   return (
     <div className="contenedor-presupuesto contenedor sombra dos-columnas">
       <div>
@@ -19,13 +30,27 @@ export default function ControlPresupuesto({ presupuesto, setPresupuesto }) {
         </p>
         <p>
           <span>Cantidad Gastada: </span>
-          {formatMoney(0)}
+          {formatMoney(gastado)}
         </p>
         <p>
           <span>Cantidad Disponible: </span>
-          {formatMoney(presupuesto)}
+          {formatMoney(disponible)}
         </p>
       </div>
     </div>
   );
 }
+
+ControlPresupuesto.propTypes = {
+  gastos: PropTypes.arrayOf(
+    PropTypes.shape({
+      categoria: PropTypes.string,
+      nombre: PropTypes.string,
+      cantidad: PropTypes.number,
+      id: PropTypes.string,
+      fecha: PropTypes.number,
+    })
+  ),
+  presupuesto: PropTypes.number,
+  setPresupuesto: PropTypes.func,
+};

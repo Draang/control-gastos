@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import Mensaje from "./Mensaje";
 export default function NuevoPresupuesto({
@@ -17,7 +19,7 @@ export default function NuevoPresupuesto({
     }
   };
   return (
-    <div className="contenedor'presupuesto contenedor sombra">
+    <div className="contenedor-presupuesto contenedor sombra">
       <form onSubmit={handlePresupuesto} className="formulario">
         <div className="campo">
           <label htmlFor="">Definir Presupuesto</label>
