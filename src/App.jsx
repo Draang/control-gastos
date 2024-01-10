@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./components/header";
 import Modal from "./components/Modal";
 import Mensaje from "./components/Mensaje";
@@ -13,17 +13,37 @@ function App() {
   const [animarModal, setAnimarModal] = useState(false);
   const [gastos, setGastos] = useState([]);
   const [success, setSuccess] = useState("");
-  function handleNuevoGasto() {
+  const [gastoEditar, setGastoEditar] = useState({});
+  useEffect(() => {
+    if (Object.keys(gastoEditar).length > 0) {
+      openModal();
+      console.log("nuevo editar...");
+    }
+  }, [gastoEditar]);
+  function openModal() {
     setModal(true);
     setTimeout(() => {
       setAnimarModal(true);
     }, 150);
   }
+  function handleNuevoGasto() {
+    setGastoEditar({});
+    openModal();
+  }
   function saveGasto(gasto) {
-    gasto.id = generarId();
-    gasto.fecha = Date.now();
-    setGastos([...gastos, gasto]);
-    setSuccess(gasto.nombre);
+    let msgSuccess = "";
+    if (gasto.id) {
+      const copyGastos = gastos.map((v) => (v.id == gasto.id ? gasto : v));
+      setGastos(copyGastos);
+      msgSuccess = `Gasto ${gasto.nombre} editado`;
+    } else {
+      gasto.id = generarId();
+      gasto.fecha = Date.now();
+      setGastos([...gastos, gasto]);
+      msgSuccess = `Gasto ${gasto.nombre} añadido`;
+    }
+
+    setSuccess(msgSuccess);
     setTimeout(() => {
       setSuccess("");
     }, 3000);
@@ -41,10 +61,8 @@ function App() {
       {isValidPresupuesto && (
         <>
           <main>
-            {success && (
-              <Mensaje tipo={"success"}>{`Gasto ${success} anadidio`}</Mensaje>
-            )}
-            <ListadoGastos gastos={gastos} />
+            {success && <Mensaje tipo={"success"}>{success}</Mensaje>}
+            <ListadoGastos gastos={gastos} setGastoEditar={setGastoEditar} />
           </main>
           <div className="nuevo-gasto">
             <img
@@ -61,6 +79,7 @@ function App() {
           animarModal={animarModal}
           setAnimarModal={setAnimarModal}
           saveGasto={saveGasto}
+          gastoEditar={gastoEditar}
         />
       )}
     </div>

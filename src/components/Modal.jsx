@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Mensaje from "./Mensaje";
 import CerrarBtn from "../img/cerrar.svg";
 
@@ -8,12 +8,19 @@ export default function Modal({
   animarModal,
   setAnimarModal,
   saveGasto,
+  gastoEditar,
 }) {
   const [nombre, setNombre] = useState("");
   const [cantidad, setCantidad] = useState(0);
   const [categoria, setCategoria] = useState("");
   const [error, setError] = useState("");
-
+  useEffect(() => {
+    if (Object.keys(gastoEditar).length > 0) {
+      setNombre(gastoEditar.nombre);
+      setCantidad(gastoEditar.cantidad);
+      setCategoria(gastoEditar.categoria);
+    }
+  }, []);
   function ocultarModal() {
     setAnimarModal(false);
     setTimeout(() => {
@@ -35,7 +42,17 @@ export default function Modal({
       }, 3000);
     } else {
       setError("");
-      saveGasto({ nombre, cantidad, categoria });
+      if (Object.keys(gastoEditar).length > 0) {
+        saveGasto({
+          ...gastoEditar,
+          nombre: nombre,
+          cantidad: cantidad,
+          categoria: categoria,
+        });
+      } else {
+        saveGasto({ nombre, cantidad, categoria });
+      }
+
       ocultarModal();
     }
   }
@@ -49,7 +66,9 @@ export default function Modal({
         className={`formulario ${animarModal ? "animar" : ""}`}
         onSubmit={handleSubmit}
       >
-        <legend>Nuevo Gasto</legend>
+        <legend>
+          {Object.keys(gastoEditar).length > 0 ? "Editar Gasto" : "Nuevo Gasto"}
+        </legend>
         <div className="campo">
           <label htmlFor="nombre">Nombre Gasto</label>
           <input
@@ -90,7 +109,14 @@ export default function Modal({
             <option value="servicios">Servicios 📝</option>
           </select>
         </div>
-        <input type="submit" value="Añadir gasto" />
+        <input
+          type="submit"
+          value={
+            Object.keys(gastoEditar).length > 0
+              ? "Editar Gasto"
+              : "Añadir Gasto"
+          }
+        />
         {error && <Mensaje tipo="error">{error}</Mensaje>}
       </form>
     </div>
@@ -102,4 +128,5 @@ Modal.propTypes = {
   saveGasto: PropTypes.func,
   setAnimarModal: PropTypes.func,
   setModal: PropTypes.func,
+  gastoEditarP: PropTypes.shape,
 };

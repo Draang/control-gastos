@@ -1,11 +1,11 @@
 import PropTypes from "prop-types";
 import Gasto from "./Gasto";
-export default function ListadoGastos({ gastos }) {
+export default function ListadoGastos({ gastos,setGastoEditar }) {
   return (
     <div className="listado-gastos contenedor">
       {gastos.length ? <h2>Gastos</h2> : <h2>No hay gastos</h2>}
       {gastos.map((gasto) => (
-        <Gasto gasto={gasto} key={gasto.id} />
+        <Gasto gasto={gasto} key={gasto.id} setGastoEditar={setGastoEditar}/>
       ))}
     </div>
   );
@@ -21,4 +21,5 @@ ListadoGastos.propTypes = {
       fecha: PropTypes.number,
     })
   ),
+  setGastoEditar:PropTypes.func
 };
