@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 import PropTypes from "prop-types";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 import { formatMoney } from "../helpers";
 import { useEffect, useState } from "react";
 export default function ControlPresupuesto({
@@ -21,7 +23,16 @@ export default function ControlPresupuesto({
   return (
     <div className="contenedor-presupuesto contenedor sombra dos-columnas">
       <div>
-        <p>Grafica aqui</p>
+        <CircularProgressbar
+          value={(gastado * 100) / presupuesto}
+          text={`${((gastado * 100) / presupuesto).toFixed(2)}` + "% Gastado"}
+          styles={buildStyles({
+            pathColor: "#3b82f6",
+            trailColor: "#F7F9F9",
+            pathTransitionDuration: 1,
+            textColor: "#3b82f6",
+          })}
+        />
       </div>
       <div className="contenido-presupuesto">
         <p>

@@ -35,6 +35,7 @@ function App() {
     if (gasto.id) {
       const copyGastos = gastos.map((v) => (v.id == gasto.id ? gasto : v));
       setGastos(copyGastos);
+      setGastoEditar({});
       msgSuccess = `Gasto ${gasto.nombre} editado`;
     } else {
       gasto.id = generarId();
@@ -47,6 +48,10 @@ function App() {
     setTimeout(() => {
       setSuccess("");
     }, 3000);
+  }
+  function handleDelete(id) {
+    const copyGastos = gastos.filter((gasto) => gasto.id != id);
+    setGastos(copyGastos);
   }
   return (
     <div className={modal ? "fijal" : ""}>
@@ -62,7 +67,11 @@ function App() {
         <>
           <main>
             {success && <Mensaje tipo={"success"}>{success}</Mensaje>}
-            <ListadoGastos gastos={gastos} setGastoEditar={setGastoEditar} />
+            <ListadoGastos
+              gastos={gastos}
+              setGastoEditar={setGastoEditar}
+              handleDelete={handleDelete}
+            />
           </main>
           <div className="nuevo-gasto">
             <img
@@ -80,6 +89,7 @@ function App() {
           setAnimarModal={setAnimarModal}
           saveGasto={saveGasto}
           gastoEditar={gastoEditar}
+          setGastoEditar={setGastoEditar}
         />
       )}
     </div>

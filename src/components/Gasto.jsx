@@ -29,8 +29,8 @@ const diccionarioIconos = {
   servicios: IconoSuscripciones,
 };
 
-export default function Gasto({ gasto, setGastoEditar }) {
-  const { categoria, nombre, cantidad, fecha } = gasto;
+export default function Gasto({ gasto, setGastoEditar, handleDelete }) {
+  const { categoria, nombre, cantidad, fecha, id } = gasto;
   function leadingAction() {
     return (
       <LeadingActions>
@@ -43,8 +43,9 @@ export default function Gasto({ gasto, setGastoEditar }) {
       <TrailingActions>
         <SwipeAction
           onClick={() => {
-            console.log("eliminar");
+            handleDelete(id);
           }}
+          destructive={true}
         >
           Eliminar
         </SwipeAction>
@@ -86,4 +87,5 @@ Gasto.propTypes = {
     nombre: PropTypes.string,
   }),
   setGastoEditar: PropTypes.func,
+  handleDelete: PropTypes.func,
 };

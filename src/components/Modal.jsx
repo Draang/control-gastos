@@ -9,6 +9,7 @@ export default function Modal({
   setAnimarModal,
   saveGasto,
   gastoEditar,
+  setGastoEditar,
 }) {
   const [nombre, setNombre] = useState("");
   const [cantidad, setCantidad] = useState(0);
@@ -23,6 +24,7 @@ export default function Modal({
   }, []);
   function ocultarModal() {
     setAnimarModal(false);
+    setGastoEditar({});
     setTimeout(() => {
       setModal(false);
     }, 100);
@@ -128,5 +130,6 @@ Modal.propTypes = {
   saveGasto: PropTypes.func,
   setAnimarModal: PropTypes.func,
   setModal: PropTypes.func,
-  gastoEditarP: PropTypes.shape,
+  gastoEditar: PropTypes.shape,
+  setGastoEditar: PropTypes.func,
 };
