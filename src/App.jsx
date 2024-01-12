@@ -5,21 +5,56 @@ import Mensaje from "./components/Mensaje";
 import ListadoGastos from "./components/ListadoGastos";
 import { generarId } from "./helpers";
 import IconoNuevoGasto from "./img/nuevo-gasto.svg";
+import Filtros from "./components/Filtros";
 
 function App() {
-  const [presupuesto, setPresupuesto] = useState(0);
+  const [presupuesto, setPresupuesto] = useState(
+    Number(localStorage.getItem("presupuesto")) ?? 0
+  );
+  const [gastos, setGastos] = useState(
+    localStorage.getItem("gastos")
+      ? JSON.parse(localStorage.getItem("gastos"))
+      : []
+  );
+  const [gastosFiltrados, setGastosFiltrados] = useState(gastos);
+  const [gastoEditar, setGastoEditar] = useState({});
+  const [filtro, setFiltro] = useState("");
   const [isValidPresupuesto, setIsValidPresupuesto] = useState(false);
   const [modal, setModal] = useState(false);
   const [animarModal, setAnimarModal] = useState(false);
-  const [gastos, setGastos] = useState([]);
   const [success, setSuccess] = useState("");
-  const [gastoEditar, setGastoEditar] = useState({});
+
   useEffect(() => {
     if (Object.keys(gastoEditar).length > 0) {
       openModal();
       console.log("nuevo editar...");
     }
   }, [gastoEditar]);
+
+  useEffect(() => {
+    localStorage.setItem("presupuesto", presupuesto ?? 0);
+  }, [presupuesto]);
+
+  useEffect(() => {
+    localStorage.setItem("gastos", JSON.stringify(gastos) ?? []);
+    
+  }, [gastos]);
+
+  useEffect(() => {
+    const presupuestoLS = Number(localStorage.getItem("presupuesto")) ?? 0;
+    if (presupuestoLS > 0) {
+      setIsValidPresupuesto(true);
+    }
+  }, []);
+  useEffect(() => {
+    if (filtro) {
+      const tmpGastos = gastos.filter((gasto) => gasto.categoria === filtro);
+      setGastosFiltrados(tmpGastos);
+    } else {
+      setGastosFiltrados(gastos);
+    }
+  }, [filtro]);
+
   function openModal() {
     setModal(true);
     setTimeout(() => {
@@ -67,8 +102,9 @@ function App() {
         <>
           <main>
             {success && <Mensaje tipo={"success"}>{success}</Mensaje>}
+            <Filtros filtro={filtro} setFiltro={setFiltro} />
             <ListadoGastos
-              gastos={gastos}
+              gastos={gastosFiltrados}
               setGastoEditar={setGastoEditar}
               handleDelete={handleDelete}
             />
