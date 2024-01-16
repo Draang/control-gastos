@@ -1,19 +1,25 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import Mensaje from "./Mensaje";
-export default function NuevoPresupuesto({ presupuesto, setPresupuesto }) {
+export default function NuevoPresupuesto({
+  presupuesto,
+  setPresupuesto,
+  isValidPresupuesto,
+  setIsValidPresupuesto,
+}) {
   const [error, setError] = useState("");
   const handlePresupuesto = (e) => {
     e.preventDefault();
-    // TODO: Anadir control control de formulario
-    if (!Number(presupuesto) || Number(presupuesto) <= 0) {
+    if (!presupuesto || presupuesto < 0) {
       setError("no es presupuesto valido");
     } else {
+      setIsValidPresupuesto(true);
       setError("");
-      console.log("presupuesto valido");
     }
   };
   return (
-    <div className="contenedor'presupuesto contenedor sombra">
+    <div className="contenedor-presupuesto contenedor sombra">
       <form onSubmit={handlePresupuesto} className="formulario">
         <div className="campo">
           <label htmlFor="">Definir Presupuesto</label>
@@ -22,7 +28,7 @@ export default function NuevoPresupuesto({ presupuesto, setPresupuesto }) {
             className="nuevo-presupuesto"
             placeholder="Añade presupuesto"
             value={presupuesto}
-            onChange={(e) => setPresupuesto(e.target.value)}
+            onChange={(e) => setPresupuesto(Number(e.target.value))}
           />
         </div>
         <input type="submit" value="Añdir" />
