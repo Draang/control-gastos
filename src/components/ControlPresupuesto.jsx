@@ -8,6 +8,7 @@ export default function ControlPresupuesto({
   presupuesto,
   setPresupuesto,
   gastos,
+  setGastos,
 }) {
   const [disponible, setDisponible] = useState(0);
   const [gastado, setGastado] = useState(0);
@@ -20,6 +21,13 @@ export default function ControlPresupuesto({
     setGastado(totalGastado);
     setDisponible(totalDisponible);
   }, [gastos]);
+  function handleReset() {
+    const resultado = confirm("Deseas reiniciar el presupuesto y los gastos?");
+    if (resultado) {
+      setGastos([]);
+      setPresupuesto(0);
+    }
+  }
   return (
     <div className="contenedor-presupuesto contenedor sombra dos-columnas">
       <div>
@@ -27,7 +35,7 @@ export default function ControlPresupuesto({
           value={(gastado * 100) / presupuesto}
           text={`${((gastado * 100) / presupuesto).toFixed(2)}` + "% Gastado"}
           styles={buildStyles({
-            pathColor: "#3b82f6",
+            pathColor: disponible < 0 ? "#d62626" : "#3b82f6",
             trailColor: "#F7F9F9",
             pathTransitionDuration: 1,
             textColor: "#3b82f6",
@@ -35,11 +43,14 @@ export default function ControlPresupuesto({
         />
       </div>
       <div className="contenido-presupuesto">
+        <button className="reset-app" type="button" onClick={handleReset}>
+          Resetear APP
+        </button>
         <p>
           <span>Presupuesto: </span>
           {formatMoney(presupuesto)}
         </p>
-        <p>
+        <p className={`${disponible > 0 ? "negativo" : ""}`}>
           <span>Cantidad Gastada: </span>
           {formatMoney(gastado)}
         </p>
@@ -64,4 +75,5 @@ ControlPresupuesto.propTypes = {
   ),
   presupuesto: PropTypes.number,
   setPresupuesto: PropTypes.func,
+  setGastos: PropTypes.func,
 };

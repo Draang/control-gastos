@@ -33,11 +33,13 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem("presupuesto", presupuesto ?? 0);
+    if (presupuesto == 0) {
+      setIsValidPresupuesto(false);
+    }
   }, [presupuesto]);
 
   useEffect(() => {
     localStorage.setItem("gastos", JSON.stringify(gastos) ?? []);
-    
   }, [gastos]);
 
   useEffect(() => {
@@ -53,7 +55,7 @@ function App() {
     } else {
       setGastosFiltrados(gastos);
     }
-  }, [filtro]);
+  }, [filtro, gastos]);
 
   function openModal() {
     setModal(true);
@@ -96,6 +98,7 @@ function App() {
         setPresupuesto={setPresupuesto}
         isValidPresupuesto={isValidPresupuesto}
         setIsValidPresupuesto={setIsValidPresupuesto}
+        setGastos={setGastos}
       />
 
       {isValidPresupuesto && (

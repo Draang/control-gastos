@@ -7,6 +7,7 @@ export default function Header({
   isValidPresupuesto,
   setIsValidPresupuesto,
   gastos,
+  setGastos,
 }) {
   return (
     <header>
@@ -16,6 +17,7 @@ export default function Header({
           presupuesto={presupuesto}
           setPresupuesto={setPresupuesto}
           gastos={gastos}
+          setGastos={setGastos}
         />
       ) : (
         <NuevoPresupuesto
@@ -43,4 +45,5 @@ Header.propTypes = {
   presupuesto: PropTypes.number,
   setIsValidPresupuesto: PropTypes.func,
   setPresupuesto: PropTypes.func,
+  setGastos:PropTypes.func
 };
